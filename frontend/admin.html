@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Academic Resource Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #311b92 50%, #4a148c 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #6C63FF;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 100px auto 0;
+            padding: 2rem;
+        }
+
+        .admin-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #6C63FF;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input[type="file"] {
+            display: none;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 1.5rem;
+            padding-right: 2.5rem;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #6C63FF;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        }
+
+        .form-group select option {
+            background-color: #311b92;
+            color: white;
+            padding: 0.8rem;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            width: 100%;
+            text-align: center;
+        }
+
+        .file-input-label:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .file-input-label.has-file {
+            border-style: solid;
+            border-color: #6C63FF;
+            background: rgba(108, 99, 255, 0.1);
+        }
+
+        #selectedFileName {
+            display: block;
+            margin-top: 0.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #6C63FF, #5a52d5);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .subjects-list {
+            margin-top: 2rem;
+        }
+
+        .subject-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .subject-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .subject-name {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .delete-btn {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: rgba(244, 67, 54, 0.2);
+        }
+
+        .papers-list {
+            margin-left: 1rem;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            padding-left: 1rem;
+        }
+
+        .paper-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .paper-title {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            .admin-section {
+                padding: 1.5rem;
+            }
+            .subject-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            .delete-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            background: rgba(108, 99, 255, 0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon i {
+            font-size: 1.8rem;
+            color: #6C63FF;
+        }
+
+        .stat-info h3 {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-info p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #6C63FF;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        }
+
+        .subject-item {
+            transition: all 0.3s ease;
+        }
+
+        .subject-item.hidden {
+            display: none;
+        }
+
+        .subject-item.highlight {
+            background: rgba(108, 99, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                Admin Portal
+            </a>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <div class="notification" id="notification"></div>
+
+    <div class="main-content">
+        <div class="admin-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Site Statistics
+            </h2>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Visitors</h3>
+                        <p id="visitorCount">Loading...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Last Visit</h3>
+                        <p id="lastVisit">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2 class="section-title">
+                <i class="fas fa-plus-circle"></i>
+                Add New Subject
+            </h2>
+            <form id="addSubjectForm">
+                <div class="form-group">
+                    <label for="subjectName">Subject Name</label>
+                    <input type="text" id="subjectName" required>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus"></i>
+                    Add Subject
+                </button>
+            </form>
+        </div>
+
+        <div class="admin-section">
+            <h2 class="section-title">
+                <i class="fas fa-file-upload"></i>
+                Upload Paper
+            </h2>
+            <form id="uploadPaperForm">
+                <div class="form-group">
+                    <label for="subject">Select Subject</label>
+                    <select id="subject" required>
+                        <option value="">Choose a subject</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paperTitle">Paper Title</label>
+                    <input type="text" id="paperTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="paperFile" class="file-input-label">
+                        <i class="fas fa-file-pdf"></i>
+                        Choose PDF File
+                    </label>
+                    <input type="file" id="paperFile" accept=".pdf" required>
+                    <span id="selectedFileName" style="margin-left: 1rem; color: rgba(255,255,255,0.7);"></span>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-upload"></i>
+                    Upload Paper
+                </button>
+            </form>
+        </div>
+
+        <div class="admin-section">
+            <h2 class="section-title">
+                <i class="fas fa-list"></i>
+                Manage Subjects and Papers
+            </h2>
+            <div class="form-group">
+                <input type="text" id="subjectSearch" placeholder="Search subjects..." class="search-input">
+            </div>
+            <div class="subjects-list" id="subjectsList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Check if admin is logged in
+        if (!localStorage.getItem('adminToken')) {
+            window.location.href = '/admin-login';
+        }
+
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = isError ? '#ffebee' : '#e8f5e9';
+            notification.style.color = isError ? '#c62828' : '#2e7d32';
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        async function loadSubjects() {
+            try {
+                const response = await fetch('/api/subjects');
+                const subjects = await response.json();
+                
+                // Update subject dropdown
+                const subjectSelect = document.getElementById('subject');
+                subjectSelect.innerHTML = '<option value="">Choose a subject</option>' +
+                    subjects.map(subject => 
+                        `<option value="${subject._id}">${subject.name}</option>`
+                    ).join('');
+                
+                // Update subjects list
+                const subjectsList = document.getElementById('subjectsList');
+                if (subjects.length === 0) {
+                    subjectsList.innerHTML = '<p style="color: rgba(255,255,255,0.7);">No subjects added yet</p>';
+                    return;
+                }
+                
+                subjectsList.innerHTML = subjects.map(subject => `
+                    <div class="subject-item" data-subject-id="${subject._id}">
+                        <div class="subject-header">
+                            <h3 class="subject-name">${subject.name}</h3>
+                            <button class="delete-btn" onclick="deleteSubject('${subject._id}')">
+                                <i class="fas fa-trash"></i>
+                                Delete Subject
+                            </button>
+                        </div>
+                        <div class="papers-list">
+                            ${subject.papers && subject.papers.length > 0 ? 
+                                subject.papers.map(paper => `
+                                    <div class="paper-item" data-paper-id="${paper._id}">
+                                        <span class="paper-title">${paper.title}</span>
+                                        <button class="delete-btn" onclick="deletePaper('${subject._id}', '${paper._id}')">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </button>
+                                    </div>
+                                `).join('') : 
+                                '<p style="color: rgba(255,255,255,0.6);">No papers uploaded yet</p>'
+                            }
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error loading subjects', true);
+            }
+        }
+
+        // Add Subject Form
+        document.getElementById('addSubjectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const subjectName = document.getElementById('subjectName').value;
+            
+            try {
+                const response = await fetch('/api/subjects', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: subjectName })
+                });
+                
+                if (!response.ok) throw new Error('Failed to add subject');
+                
+                document.getElementById('subjectName').value = '';
+                showNotification('Subject added successfully');
+                loadSubjects();
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error adding subject', true);
+            }
+        });
+
+        // Update the file input event listener
+        document.getElementById('paperFile').addEventListener('change', function(e) {
+            const fileInput = e.target;
+            const fileLabel = document.querySelector('.file-input-label');
+            const fileNameSpan = document.getElementById('selectedFileName');
+            
+            if (fileInput.files[0]) {
+                const file = fileInput.files[0];
+                
+                // Check if file is PDF
+                if (!file.type.match('application/pdf')) {
+                    showNotification('Please select a PDF file', true);
+                    fileInput.value = '';
+                    fileLabel.classList.remove('has-file');
+                    fileLabel.innerHTML = '<i class="fas fa-file-pdf"></i> Choose PDF File';
+                    fileNameSpan.textContent = '';
+                    return;
+                }
+                
+                // Check file size (10MB limit)
+                if (file.size > 10 * 1024 * 1024) {
+                    showNotification('File size should be less than 10MB', true);
+                    fileInput.value = '';
+                    fileLabel.classList.remove('has-file');
+                    fileLabel.innerHTML = '<i class="fas fa-file-pdf"></i> Choose PDF File';
+                    fileNameSpan.textContent = '';
+                    return;
+                }
+                
+                fileLabel.classList.add('has-file');
+                fileLabel.innerHTML = '<i class="fas fa-file-pdf"></i> File Selected';
+                fileNameSpan.textContent = file.name;
+            } else {
+                fileLabel.classList.remove('has-file');
+                fileLabel.innerHTML = '<i class="fas fa-file-pdf"></i> Choose PDF File';
+                fileNameSpan.textContent = '';
+            }
+        });
+
+        // Update the upload form submission
+        document.getElementById('uploadPaperForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            
+            const formData = new FormData();
+            const subject = document.getElementById('subject').value;
+            const title = document.getElementById('paperTitle').value;
+            const file = document.getElementById('paperFile').files[0];
+            
+            if (!subject) {
+                showNotification('Please select a subject', true);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                return;
+            }
+            
+            if (!title.trim()) {
+                showNotification('Please enter a paper title', true);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                return;
+            }
+            
+            if (!file) {
+                showNotification('Please select a PDF file', true);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                return;
+            }
+            
+            formData.append('subject', subject);
+            formData.append('title', title);
+            formData.append('paper', file);
+            
+            try {
+                const response = await fetch('/api/subjects/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to upload paper');
+                }
+                
+                document.getElementById('uploadPaperForm').reset();
+                const fileLabel = document.querySelector('.file-input-label');
+                fileLabel.classList.remove('has-file');
+                fileLabel.innerHTML = '<i class="fas fa-file-pdf"></i> Choose PDF File';
+                document.getElementById('selectedFileName').textContent = '';
+                showNotification('Paper uploaded successfully');
+                loadSubjects();
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(error.message || 'Error uploading paper', true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+
+        // Update delete subject function
+        async function deleteSubject(subjectId) {
+            if (!confirm('Are you sure you want to delete this subject? All associated papers will be permanently deleted.')) {
+                return;
+            }
+            
+            const subjectElement = document.querySelector(`[data-subject-id="${subjectId}"]`);
+            if (subjectElement) {
+                subjectElement.style.opacity = '0.5';
+                const deleteBtn = subjectElement.querySelector('.delete-btn');
+                if (deleteBtn) {
+                    deleteBtn.disabled = true;
+                    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+                }
+            }
+            
+            try {
+                const response = await fetch(`/api/subjects/${subjectId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.message || 'Failed to delete subject');
+                }
+                
+                showNotification('Subject deleted successfully');
+                loadSubjects();
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(error.message || 'Error deleting subject', true);
+                if (subjectElement) {
+                    subjectElement.style.opacity = '1';
+                    const deleteBtn = subjectElement.querySelector('.delete-btn');
+                    if (deleteBtn) {
+                        deleteBtn.disabled = false;
+                        deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Delete Subject';
+                    }
+                }
+            }
+        }
+
+        // Update delete paper function
+        async function deletePaper(subjectId, paperId) {
+            if (!confirm('Are you sure you want to delete this paper?')) {
+                return;
+            }
+            
+            const paperElement = document.querySelector(`[data-paper-id="${paperId}"]`);
+            if (paperElement) {
+                paperElement.style.opacity = '0.5';
+                const deleteBtn = paperElement.querySelector('.delete-btn');
+                if (deleteBtn) {
+                    deleteBtn.disabled = true;
+                    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+                }
+            }
+            
+            try {
+                const response = await fetch(`/api/subjects/${subjectId}/papers/${paperId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.message || 'Failed to delete paper');
+                }
+                
+                showNotification('Paper deleted successfully');
+                loadSubjects();
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(error.message || 'Error deleting paper', true);
+                if (paperElement) {
+                    paperElement.style.opacity = '1';
+                    const deleteBtn = paperElement.querySelector('.delete-btn');
+                    if (deleteBtn) {
+                        deleteBtn.disabled = false;
+                        deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+                    }
+                }
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            window.location.href = '/';
+        }
+
+        async function loadStatistics() {
+            try {
+                const response = await fetch('/api/visits/stats');
+                const data = await response.json();
+                
+                document.getElementById('visitorCount').textContent = data.count.toLocaleString();
+                
+                if (data.lastVisit) {
+                    const lastVisitDate = new Date(data.lastVisit);
+                    document.getElementById('lastVisit').textContent = lastVisitDate.toLocaleString();
+                } else {
+                    document.getElementById('lastVisit').textContent = 'No visits yet';
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+                document.getElementById('visitorCount').textContent = 'Error';
+                document.getElementById('lastVisit').textContent = 'Error';
+            }
+        }
+
+        // Load subjects when page loads
+        loadSubjects();
+        loadStatistics();
+        setInterval(loadStatistics, 60000); // Refresh stats every minute
+
+        // Add this after loadSubjects function
+        document.getElementById('subjectSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const subjects = document.querySelectorAll('.subject-item');
+            let found = false;
+
+            subjects.forEach(subject => {
+                const subjectName = subject.querySelector('.subject-name').textContent.toLowerCase();
+                const matches = subjectName.includes(searchTerm);
+                subject.classList.toggle('hidden', !matches);
+                subject.classList.toggle('highlight', matches && searchTerm.length > 0);
+
+                if (matches && !found && searchTerm.length > 0) {
+                    found = true;
+                    subject.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

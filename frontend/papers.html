@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Papers - Academic Resource Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #311b92 50%, #4a148c 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #6C63FF;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 100px auto 0;
+            padding: 2rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #6C63FF, #FF6584);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 1s ease;
+        }
+
+        .search-container {
+            position: sticky;
+            top: 80px;
+            z-index: 900;
+            background: rgba(26, 35, 126, 0.9);
+            padding: 1rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-box:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(108, 99, 255, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .subjects-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .subject-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .subject-header {
+            background: rgba(108, 99, 255, 0.2);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .subject-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .papers-list {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .paper-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .paper-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .paper-title {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            flex-grow: 1;
+            margin-right: 1rem;
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #6C63FF, #5a52d5);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .no-subjects {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .error-message {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            .subject-name {
+                font-size: 1.1rem;
+            }
+            .paper-item {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            .download-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                Academic Resource Hub
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="page-title">Academic Papers</h1>
+
+        <a href="/" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Back to Home
+        </a>
+
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" 
+                   class="search-box" 
+                   placeholder="Search by subject name..." 
+                   id="searchInput">
+        </div>
+
+        <div class="subjects-container" id="subjectsContainer">
+            <div class="loading">Loading subjects and papers...</div>
+        </div>
+    </div>
+
+    <script>
+        async function loadSubjects() {
+            try {
+                const response = await fetch('/api/subjects');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch subjects');
+                }
+                const subjects = await response.json();
+                displaySubjects(subjects);
+                setupSearch(subjects);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('subjectsContainer').innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Error loading subjects. Please try refreshing the page.
+                    </div>
+                `;
+            }
+        }
+
+        function displaySubjects(subjects) {
+            const container = document.getElementById('subjectsContainer');
+            if (!subjects || subjects.length === 0) {
+                container.innerHTML = `
+                    <div class="no-subjects">
+                        <i class="fas fa-folder-open"></i>
+                        No subjects found
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = subjects.map(subject => `
+                <div class="subject-card" id="subject-${subject._id}">
+                    <div class="subject-header" onclick="togglePapers('${subject._id}')">
+                        <h3 class="subject-name">
+                            <i class="fas fa-book"></i>
+                            ${subject.name}
+                            <span class="papers-count">(${subject.papers.length} papers)</span>
+                        </h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="papers-list" id="papers-${subject._id}" style="display: none;">
+                        ${subject.papers && subject.papers.length > 0 ? 
+                            subject.papers.map(paper => `
+                                <div class="paper-item">
+                                    <span class="paper-title">${paper.title}</span>
+                                    <a href="/uploads/${paper.fileName}" class="download-btn" download>
+                                        <i class="fas fa-download"></i>
+                                        Download
+                                    </a>
+                                </div>
+                            `).join('') : 
+                            '<p style="color: rgba(255,255,255,0.6);">No papers available for this subject</p>'
+                        }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function togglePapers(subjectId) {
+            const papersList = document.getElementById(`papers-${subjectId}`);
+            const currentDisplay = papersList.style.display;
+            papersList.style.display = currentDisplay === 'none' ? 'block' : 'none';
+            
+            const subjectCard = document.getElementById(`subject-${subjectId}`);
+            const chevron = subjectCard.querySelector('.fa-chevron-down');
+            chevron.style.transform = currentDisplay === 'none' ? 'rotate(180deg)' : 'rotate(0)';
+        }
+
+        function setupSearch(subjects) {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredSubjects = subjects.filter(subject =>
+                    subject.name.toLowerCase().includes(searchTerm)
+                );
+                displaySubjects(filteredSubjects);
+
+                // If search term matches a subject exactly, expand that subject
+                const exactMatch = filteredSubjects.find(subject => 
+                    subject.name.toLowerCase() === searchTerm
+                );
+                if (exactMatch) {
+                    setTimeout(() => {
+                        const papersList = document.getElementById(`papers-${exactMatch._id}`);
+                        if (papersList) {
+                            papersList.style.display = 'block';
+                            const chevron = document.querySelector(`#subject-${exactMatch._id} .fa-chevron-down`);
+                            chevron.style.transform = 'rotate(180deg)';
+                        }
+                    }, 100);
+                }
+            });
+        }
+
+        // Load subjects when page loads
+        loadSubjects();
+    </script>
+</body>
+</html> 

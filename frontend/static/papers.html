@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Papers - Always Available</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #1a237e, #311b92);
+            color: white;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .papers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .paper-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s;
+        }
+
+        .paper-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .paper-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .paper-info {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.2s;
+        }
+
+        .download-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .status {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .offline {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .online {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Academic Resource Hub</h1>
+            <p>Previous Year Question Papers</p>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <input type="text" 
+               class="search-box" 
+               placeholder="Search papers by title, subject, or year..." 
+               id="searchInput">
+
+        <div class="papers-grid" id="papersGrid"></div>
+    </div>
+
+    <script>
+        let papers = [];
+        const statusDiv = document.getElementById('status');
+        const PAPERS_JSON_URL = 'https://drive.google.com/uc?export=download&id=YOUR_PAPERS_JSON_ID';
+
+        async function loadPapers() {
+            try {
+                const response = await fetch(PAPERS_JSON_URL);
+                papers = await response.json();
+                displayPapers(papers);
+                statusDiv.className = 'status online';
+                statusDiv.textContent = '✓ Papers loaded successfully';
+            } catch (error) {
+                console.error('Error loading papers:', error);
+                statusDiv.className = 'status offline';
+                statusDiv.textContent = '⚠ Error loading papers. Please check your internet connection.';
+            }
+        }
+
+        function displayPapers(papers) {
+            const grid = document.getElementById('papersGrid');
+            grid.innerHTML = papers.map(paper => `
+                <div class="paper-card">
+                    <h3 class="paper-title">${paper.title}</h3>
+                    <div class="paper-info">
+                        <p>Subject: ${paper.subjectName}</p>
+                        <p>Year: ${paper.year}</p>
+                        <p>Semester: ${paper.semester}</p>
+                    </div>
+                    <a href="${paper.url}" class="download-btn" target="_blank">
+                        Download Paper
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredPapers = papers.filter(paper => 
+                    paper.title.toLowerCase().includes(searchTerm) ||
+                    paper.subjectName.toLowerCase().includes(searchTerm) ||
+                    paper.year.toString().includes(searchTerm)
+                );
+                displayPapers(filteredPapers);
+            });
+        }
+
+        // Initialize
+        loadPapers();
+        setupSearch();
+    </script>
+</body>
+</html> 

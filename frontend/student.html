@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Resource Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #311b92 50%, #4a148c 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #6C63FF;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 100px auto 0;
+            padding: 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #6C63FF, #FF6584);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .subjects-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .subject-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .subject-header {
+            background: rgba(108, 99, 255, 0.2);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .subject-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .papers-list {
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .paper-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .paper-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .paper-title {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #6C63FF, #5a52d5);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .admin-link {
+            text-align: center;
+            margin-top: 3rem;
+            padding-bottom: 2rem;
+        }
+
+        .admin-link a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .admin-link a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .no-subjects {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .subject-name {
+                font-size: 1.1rem;
+            }
+            .paper-item {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            .download-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        .important-notice {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #ffd700;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .important-notice h3 {
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .important-notice ul {
+            list-style: none;
+            padding-left: 1.5rem;
+        }
+
+        .important-notice ul li {
+            position: relative;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .important-notice ul li:before {
+            content: "•";
+            color: #ffd700;
+            position: absolute;
+            left: -1rem;
+        }
+
+        /* Add search box styles */
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-box:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(108, 99, 255, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                Academic Resource Hub
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="important-notice">
+            <h3><i class="fas fa-exclamation-circle"></i> Important Notice</h3>
+            <p>Please note:</p>
+            <ul>
+                <li>These papers are from previous academic years when the admin was a student.</li>
+                <li>The syllabus may have changed - please verify with your current syllabus before using.</li>
+                <li>Use these papers at your own discretion as reference material only.</li>
+                <li>For the most up-to-date information, always consult with your professors and current course materials.</li>
+            </ul>
+        </div>
+
+        <div class="hero">
+            <h1>Welcome to Academic Resource Hub</h1>
+            <p>Access previous year question papers to enhance your academic preparation</p>
+        </div>
+
+        <!-- Add search box -->
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" 
+                   class="search-box" 
+                   id="searchInput" 
+                   placeholder="Search subjects...">
+        </div>
+
+        <div class="subjects-container" id="subjectsContainer"></div>
+
+        <div class="admin-link">
+            <a href="/admin-login" title="Authorized Personnel Only">
+                <i class="fas fa-lock"></i> Admin Access (Authorized Only)
+            </a>
+            <p style="margin-top: 0.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.6);">
+                This section is restricted to authorized administrators only.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Track visit when page loads
+        async function trackVisit() {
+            try {
+                await fetch('/api/visits/track', { method: 'POST' });
+            } catch (error) {
+                console.error('Error tracking visit:', error);
+            }
+        }
+
+        async function loadSubjects() {
+            try {
+                const response = await fetch('/api/subjects');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch subjects');
+                }
+                const subjects = await response.json();
+                displaySubjects(subjects);
+                setupSearch(subjects); // Add this line to initialize search
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('subjectsContainer').innerHTML = `
+                    <div class="no-subjects">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Error loading subjects. Please try refreshing the page.
+                    </div>
+                `;
+            }
+        }
+
+        function displaySubjects(subjects) {
+            const container = document.getElementById('subjectsContainer');
+            if (!subjects || subjects.length === 0) {
+                container.innerHTML = `
+                    <div class="no-subjects">
+                        <i class="fas fa-folder-open"></i>
+                        No subjects found
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = subjects.map(subject => `
+                <div class="subject-card" id="subject-${subject._id}">
+                    <div class="subject-header" onclick="togglePapers('${subject._id}')">
+                        <h3 class="subject-name">
+                            <i class="fas fa-book"></i>
+                            ${subject.name}
+                            <span style="font-size: 0.9rem; opacity: 0.7">(${subject.papers.length} papers)</span>
+                        </h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="papers-list" id="papers-${subject._id}">
+                        ${subject.papers && subject.papers.length > 0 ? 
+                            subject.papers.map(paper => `
+                                <div class="paper-item">
+                                    <span class="paper-title">${paper.title}</span>
+                                    <a href="/uploads/${paper.fileName}" class="download-btn" download>
+                                        <i class="fas fa-download"></i>
+                                        Download
+                                    </a>
+                                </div>
+                            `).join('') : 
+                            '<p style="color: rgba(255,255,255,0.6);">No papers available for this subject</p>'
+                        }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function togglePapers(subjectId) {
+            const papersList = document.getElementById(`papers-${subjectId}`);
+            const currentDisplay = papersList.style.display;
+            papersList.style.display = currentDisplay === 'none' ? 'block' : 'none';
+            
+            const subjectCard = document.getElementById(`subject-${subjectId}`);
+            const chevron = subjectCard.querySelector('.fa-chevron-down');
+            chevron.style.transform = currentDisplay === 'none' ? 'rotate(180deg)' : 'rotate(0)';
+        }
+
+        // Add search functionality
+        function setupSearch(allSubjects) {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredSubjects = allSubjects.filter(subject => {
+                    const nameMatch = subject.name.toLowerCase().includes(searchTerm);
+                    const paperMatch = subject.papers.some(paper => 
+                        paper.title.toLowerCase().includes(searchTerm)
+                    );
+                    return nameMatch || paperMatch;
+                });
+                
+                displaySubjects(filteredSubjects);
+                
+                // If search term matches, expand and scroll to that subject
+                if (searchTerm.length > 0) {
+                    let firstMatch = null;
+                    filteredSubjects.forEach(subject => {
+                        if (subject.name.toLowerCase().includes(searchTerm)) {
+                            const subjectElement = document.getElementById(`subject-${subject._id}`);
+                            const papersList = document.getElementById(`papers-${subject._id}`);
+                            
+                            if (papersList) {
+                                papersList.style.display = 'block';
+                                const chevron = document.querySelector(`#subject-${subject._id} .fa-chevron-down`);
+                                if (chevron) {
+                                    chevron.style.transform = 'rotate(180deg)';
+                                }
+                            }
+                            
+                            // Store the first match for scrolling
+                            if (!firstMatch && subjectElement) {
+                                firstMatch = subjectElement;
+                            }
+                        }
+                    });
+
+                    // Scroll to the first matched subject with smooth animation
+                    if (firstMatch) {
+                        // Wait a tiny bit for the DOM to update
+                        setTimeout(() => {
+                            firstMatch.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center' 
+                            });
+                            // Add highlight effect
+                            firstMatch.style.transition = 'background-color 0.3s ease';
+                            firstMatch.style.backgroundColor = 'rgba(108, 99, 255, 0.2)';
+                            setTimeout(() => {
+                                firstMatch.style.backgroundColor = '';
+                            }, 1500);
+                        }, 100);
+                    }
+                }
+            });
+        }
+
+        // Load subjects and track visit when page loads
+        loadSubjects();
+        trackVisit();
+    </script>
+</body>
+</html> 

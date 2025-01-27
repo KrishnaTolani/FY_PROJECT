@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Papers - Always Available</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #1a237e, #311b92);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .papers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .paper-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .paper-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .paper-info {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Academic Papers</h1>
+            <p>All papers are available offline</p>
+        </div>
+
+        <input type="text" 
+               class="search-box" 
+               placeholder="Search papers by title, subject, or year..." 
+               id="searchInput">
+
+        <div class="papers-grid" id="papersGrid"></div>
+    </div>
+
+    <script>
+        // Load papers from local JSON file
+        fetch('papers.json')
+            .then(response => response.json())
+            .then(papers => {
+                window.allPapers = papers;
+                displayPapers(papers);
+                setupSearch();
+            })
+            .catch(error => {
+                console.error('Error loading papers:', error);
+                document.getElementById('papersGrid').innerHTML = 
+                    '<p style="text-align: center; grid-column: 1/-1;">Error loading papers. Please try refreshing the page.</p>';
+            });
+
+        function displayPapers(papers) {
+            const grid = document.getElementById('papersGrid');
+            grid.innerHTML = papers.map(paper => `
+                <div class="paper-card">
+                    <h3 class="paper-title">${paper.title}</h3>
+                    <div class="paper-info">
+                        <p>Subject: ${paper.subjectName}</p>
+                        <p>Year: ${paper.year}</p>
+                        <p>Semester: ${paper.semester}</p>
+                    </div>
+                    <a href="${paper.url}" class="download-btn" download>
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredPapers = window.allPapers.filter(paper => 
+                    paper.title.toLowerCase().includes(searchTerm) ||
+                    paper.subjectName.toLowerCase().includes(searchTerm) ||
+                    paper.year.toString().includes(searchTerm)
+                );
+                displayPapers(filteredPapers);
+            });
+        }
+    </script>
+</body>
+</html> 
