@@ -17,21 +17,60 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Connect to MongoDB
-const connectDB = async () => {
+// Global variable to track MongoDB connection status
+let isMongoConnected = false;
+
+// Connect to MongoDB with retry logic
+const connectWithRetry = async () => {
     try {
         if (!process.env.MONGODB_URI) {
             throw new Error('MONGODB_URI is not defined in environment variables');
         }
         await mongoose.connect(process.env.MONGODB_URI);
         console.log('Connected to MongoDB');
+        isMongoConnected = true;
     } catch (error) {
         console.error('MongoDB connection error:', error);
-        process.exit(1);
+        isMongoConnected = false;
+        // Retry connection after 5 seconds
+        console.log('Retrying connection in 5 seconds...');
+        setTimeout(connectWithRetry, 5000);
     }
 };
 
-connectDB();
+// Initial connection attempt
+connectWithRetry();
+
+// Monitor MongoDB connection
+mongoose.connection.on('connected', () => {
+    console.log('MongoDB connected');
+    isMongoConnected = true;
+});
+
+mongoose.connection.on('error', (err) => {
+    console.error('MongoDB connection error:', err);
+    isMongoConnected = false;
+});
+
+mongoose.connection.on('disconnected', () => {
+    console.log('MongoDB disconnected');
+    isMongoConnected = false;
+    // Try to reconnect
+    setTimeout(connectWithRetry, 5000);
+});
+
+// Middleware to check MongoDB connection
+const checkMongoConnection = (req, res, next) => {
+    if (!isMongoConnected && req.path.startsWith('/api/')) {
+        return res.status(503).json({
+            error: 'Database connection unavailable',
+            message: 'The service is temporarily unavailable. Please try again later.'
+        });
+    }
+    next();
+};
+
+app.use(checkMongoConnection);
 
 // Routes
 const subjectRoutes = require('./routes/subjectRoutes');
@@ -62,10 +101,22 @@ app.get('/papers', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/papers.html'));
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'UP',
+        mongodb: isMongoConnected ? 'Connected' : 'Disconnected',
+        timestamp: new Date()
+    });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong!' });
+    res.status(500).json({ 
+        message: 'Something went wrong!',
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
 });
 
 const PORT = process.env.PORT || 5000;
